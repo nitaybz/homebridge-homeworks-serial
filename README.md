@@ -19,16 +19,6 @@
 
 Many Thanks to @cptechie who inspired me to create this plugin via his own plugin: [homebridge-lutron-homeworks](https://github.com/cptechie/homebridge-lutron-homeworks)
 
-## Installation
-
-This plugin is HomeBridge verified and [HOOBS](https://hoobs.org/?ref=10876) certified and can be easily installed and configured through their UI.
-
-If you don't use Homebridge UI or HOOBS, keep reading:
-
-1. Install homebridge using: `sudo npm install -g homebridge --unsafe-perm`
-2. Install this plugin using: `sudo npm install -g homebridge-homeworks-serial`
-3. Update your configuration file. See `config-sample.json` in this repository for a sample.
-
 ## Config File
 
 ###### \* Do not copy-paste this code, it will not work
