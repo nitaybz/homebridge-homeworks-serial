@@ -1,0 +1,70 @@
+{
+  "bridge": {
+    "name": "Homebridge",
+    "username": "CD:22:3D:E3:CE:30",
+    "port": 51826,
+    "pin": "031-45-154"
+  },
+
+  "description": "This is an example configuration for the homebridge-homeworks-serial plugin",
+  "platforms": [
+    {
+      "platform": "HomeworksSerial",
+      "name": "Homeworks Serial",
+      "discoveryLogs": true,
+      "serialPath": "/dev/ttyUSB0",
+      "baudRate": 115200,
+      "loginRequired": false,
+      "password": "jetski",
+      "debug": false,
+      "devices": [
+        {
+          "name": "Hallway Light",
+          "type": "dimmer",
+          "address": "01:01:00:02:04",
+          "defaultBrightness": 100,
+          "defaultFadeTime": 0
+        },
+        {
+          "name": "Bathroom Light",
+          "type": "switch",
+          "address": "04:06:01",
+          "buttonId": 2,
+          "pressType": "single"
+        },
+        {
+          "name": "Heater",
+          "type": "outlet",
+          "address": "04:06:01",
+          "buttonId": 3,
+          "pressType": "double"
+        },
+        {
+          "name": "Chiller",
+          "type": "switch",
+          "address": "04:06:01",
+          "buttonId": 1,
+          "pressType": "hold"
+        },
+        {
+          "name": "Shutters",
+          "type": "windowCovering",
+          "address": "04:06:01",
+          "openButtonId": 4,
+          "closeButtonId": 5,
+          "midButtonId": 6,
+          "pressType": "single"
+        },
+        {
+          "name": "Living Room Scene",
+          "type": "button",
+          "address": "04:06:01",
+          "buttonId": 7
+        }
+      ]
+    }
+  ],
+
+  "accessories": [
+  ]
+}

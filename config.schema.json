@@ -1,0 +1,329 @@
+{
+  "pluginAlias": "HomeworksSerial",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Homebridge plugin for Lutron Homeworks using Serial Port (RS232)",
+  "footerDisplay": "Created by @nitaybz",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Plugin Name (for logs)",
+        "type": "string",
+        "default": "Homeworks Serial",
+        "required": true
+      },
+      "discoveryLogs": {
+        "title": "Enable Discovery Logs",
+        "description": "When checked, the plugin will produce extra logs for debugging purposes",
+        "type": "boolean",
+        "default": false
+      },
+      "loginRequired": {
+        "title": "Login Required",
+        "type": "boolean",
+        "default": false
+      },
+      "password": {
+        "title": "Password (default is: \"jetski\")",
+        "type": "string",
+        "default": "jetski"
+      },
+      "serialPath": {
+        "title": "Seconds to remove disconnected device",
+        "description": "Time in seconds to remove a device if it has not being discovered (default is 10 minutes). set 0 to not remove accessories at all.",
+        "type": "string",
+        "default": "/dev/ttyUSB0",
+        "required": false
+      },
+      "baudRate": {
+        "title": "Baud Rate",
+        "default": 115200,
+        "type": "integer",
+        "required": true,
+        "oneOf": [
+          {
+            "title": "115200",
+            "enum": [
+              115200
+            ]
+          },
+          {
+            "title": "57600",
+            "enum": [
+              57600
+            ]
+          },
+          {
+            "title": "38400",
+            "enum": [
+              38400
+            ]
+          },
+          {
+            "title": "19200",
+            "enum": [
+              19200
+            ]
+          },
+          {
+            "title": "9600",
+            "enum": [
+              9600
+            ]
+          },
+          {
+            "title": "4800",
+            "enum": [
+              4800
+            ]
+          },
+          {
+            "title": "2400",
+            "enum": [
+              2400
+            ]
+          },
+          {
+            "title": "1200",
+            "enum": [
+              1200
+            ]
+          },
+          {
+            "title": "600",
+            "enum": [
+              600
+            ]
+          },
+          {
+            "title": "300",
+            "enum": [
+              300
+            ]
+          }
+        ]
+      },
+      "debug": {
+        "title": "Enable Debug Logs",
+        "description": "When checked, the plugin will produce extra logs for debugging purposes",
+        "type": "boolean",
+        "default": false,
+        "required": false
+      },
+      "devices": {
+        "type": "array",
+        "required": false,
+        "items": {
+          "title": "Devices",
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string",
+              "required": true
+            },
+            "type": {
+              "title": "Device Type",
+              "type": "string",
+              "required": true,
+              "default": "switch",
+              "oneOf": [
+                {
+                  "title": "Dimmer",
+                  "enum": [
+                    "dimmer"
+                  ]
+                },
+                {
+                  "title": "Switch",
+                  "enum": [
+                    "switch"
+                  ]
+                },
+                {
+                  "title": "Outlet",
+                  "enum": [
+                    "outlet"
+                  ]
+                },
+                {
+                  "title": "Window Covering",
+                  "enum": [
+                    "windowCovering"
+                  ]
+                },
+                {
+                  "title": "Programable Button",
+                  "enum": [
+                    "button"
+                  ]
+                }
+              ]
+            },
+            "address": {
+              "title": "Address",
+              "type": "string",
+              "required": true
+            },
+            "defaultBrightness": {
+              "title": "Default Brightness when Turning ON",
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 100,
+              "required": false
+            },
+            "defaultFadeTime": {
+              "title": "Default Fade Time when Turning ON",
+              "type": "integer",
+              "default": 0,
+              "minimum": 0,
+              "maximum": 10,
+              "required": false
+            },
+            "buttonId": {
+              "title": "Button ID",
+              "type": "integer",
+              "placeholder": 1,
+              "required": false
+            },
+            "openButtonId": {
+              "title": "Open Button ID",
+              "type": "integer",
+              "placeholder": 1,
+              "required": false
+            },
+            "closeButtonId": {
+              "title": "Close Button ID",
+              "type": "integer",
+              "placeholder": 1,
+              "required": false
+            },
+            "midButtonId": {
+              "title": "Mid Button ID",
+              "description": "Favorite position button. this button will be pressed when setting window covering to 50%",
+              "type": "integer",
+              "placeholder": 1,
+              "required": false
+            },
+            "pressType": {
+              "title": "Press Type",
+              "type": "string",
+              "default": "single",
+              "required": true,
+              "oneOf": [
+                {
+                  "title": "Single Press",
+                  "enum": [
+                    "single"
+                  ]
+                },
+                {
+                  "title": "Double Press",
+                  "enum": [
+                    "double"
+                  ]
+                },
+                {
+                  "title": "Hold",
+                  "enum": [
+                    "hold"
+                  ]
+                },
+                {
+                  "title": "Press Release",
+                  "enum": [
+                    "release"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "layout": [
+    {
+      "key": "name"
+    },
+    {
+      "key": "discoveryLogs"
+    },
+    {
+      "key": "serialPath"
+    },
+    {
+      "key": "baudRate"
+    },
+    {
+      "key": "loginRequired"
+    },
+    {
+      "key": "password",
+      "condition": {
+        "functionBody": "try { return (model.loginRequired) } catch(e){ return false }"
+      }
+    },
+    {
+      "key": "debug"
+    },
+    {
+      "key": "devices",
+      "type": "array",
+      "title": "Devices",
+      "orderable": false,
+      "buttonText": "Add Device",
+      "expandable": true,
+      "expanded": true,
+      "items": [
+        "devices[].name",
+        "devices[].type",
+        "devices[].address",
+        {
+          "key": "devices[].defaultBrightness",
+          "condition": {
+            "functionBody": "try { return (model.devices[arrayIndices].type === 'dimmer') } catch(e){ return false }"
+          }
+        },
+        {
+          "key": "devices[].defaultFadeTime",
+          "condition": {
+            "functionBody": "try { return (model.devices[arrayIndices].type === 'dimmer') } catch(e){ return false }"
+          }
+        },
+        {
+          "key": "devices[].buttonId",
+          "condition": {
+            "functionBody": "try { return (model.devices[arrayIndices].type === 'switch' || model.devices[arrayIndices].type === 'outlet' || model.devices[arrayIndices].type === 'button') } catch(e){ return false }"
+          }
+        },
+        {
+          "key": "devices[].pressType",
+          "condition": {
+            "functionBody": "try { return (model.devices[arrayIndices].type === 'switch' || model.devices[arrayIndices].type === 'outlet') } catch(e){ return false }"
+          }
+        },
+        {
+          "key": "devices[].openButtonId",
+          "condition": {
+            "functionBody": "try { return (model.devices[arrayIndices].type === 'windowCovering') } catch(e){ return false }"
+          }
+        },
+        {
+          "key": "devices[].closeButtonId",
+          "condition": {
+            "functionBody": "try { return (model.devices[arrayIndices].type === 'windowCovering') } catch(e){ return false }"
+          }
+        },
+        {
+          "key": "devices[].midButtonId",
+          "condition": {
+            "functionBody": "try { return (model.devices[arrayIndices].type === 'windowCovering') } catch(e){ return false }"
+          }
+        }
+      ]
+    }
+  ]
+}
