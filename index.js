@@ -1,6 +1,7 @@
 const storage = require('node-persist')
 const path = require('path')
 const lutronHW = require('./lib/lutron-hw')
+const fs = require('fs');
 const PLUGIN_NAME = 'homebridge-homeworks-serial'
 const PLATFORM_NAME = 'HomeworksSerial'
 module.exports = (api) => {
@@ -21,8 +22,11 @@ class HomeworksSerialPlatform {
 		this.name = config.name || PLATFORM_NAME
 		this.devices = config.devices || []
 		this.debug = config.debug || false
+		this.extended = config.extended || false 
 		this.storage = storage
 		this.persistPath = path.join(this.api.user.persistPath(), '/../homeworks-serial-persist')
+		if (!fs.existsSync(this.persistPath))
+			fs.mkdirSync(this.persistPath)
 
 		
 		// define debug method to output debug logs when enabled in the config
@@ -48,7 +52,11 @@ class HomeworksSerialPlatform {
 			})
 	
 			this.cachedState = await this.storage.getItem('hw-serial-state') || {}
-			this.rs232 = lutronHW.initPort.bind(this)
+
+			if (this.extended)
+				this.rs232 = lutronHW.initIPCClient.bind(this)
+			else
+				this.rs232 = lutronHW.initPort.bind(this)
 		})
 
 	}

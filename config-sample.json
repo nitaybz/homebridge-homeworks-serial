@@ -16,6 +16,8 @@
       "baudRate": 115200,
       "loginRequired": false,
       "password": "jetski",
+      "commandDelay": 100,
+      "extended": false,
       "debug": false,
       "devices": [
         {

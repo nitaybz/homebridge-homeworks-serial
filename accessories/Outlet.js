@@ -75,6 +75,9 @@ class Outlet {
 	}
 
 	updateHomeKit(newState) {
+		if (this.processing)
+			return
+			
 		this.state = newState
 		
 		this.updateValue('OutletService', 'On', this.state.On)

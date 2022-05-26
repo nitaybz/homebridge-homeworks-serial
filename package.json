@@ -1,7 +1,7 @@
 {
   "name": "homebridge-homeworks-serial",
   "description": "Homebridge plugin for Lutron Homeworks using Serial Port",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "git://github.com/nitaybz/homebridge-homeworks-serial.git"
@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@serialport/parser-readline": "^10.3.0",
+    "async-await-queue": "^1.2.1",
+    "node-ipc": "^11.1.0",
     "node-persist": "^3.1.0",
     "path": "^0.12.7",
     "serialport": "^10.4.0"

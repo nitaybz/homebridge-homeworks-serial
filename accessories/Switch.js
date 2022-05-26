@@ -71,6 +71,9 @@ class Switch {
 	}
 
 	updateHomeKit(newState) {
+		if (this.processing)
+			return
+			
 		this.state = newState
 		
 		this.updateValue('SwitchService', 'On', this.state.On)

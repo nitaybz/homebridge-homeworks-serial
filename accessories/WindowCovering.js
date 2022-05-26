@@ -87,6 +87,9 @@ class WindowCovering {
 
 
 	updateHomeKit(newState) {
+		if (this.processing)
+			return
+			
 		this.state = newState
 			
 		if (this.state.PositionState === 2)

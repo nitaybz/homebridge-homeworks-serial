@@ -76,6 +76,9 @@ class Dimmer {
 	}
 
 	updateHomeKit(newState) {
+		if (this.processing)
+			return
+			
 		this.state = newState
 		
 		this.updateValue('DimmerService', 'On', this.state.On)

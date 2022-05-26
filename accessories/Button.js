@@ -70,6 +70,9 @@ class Button {
 
 
 	updateHomeKit(newState) {
+		if (this.processing)
+			return
+
 		this.state = newState
 		
 		this.updateValue('ButtonService', 'ProgrammableSwitchEvent', this.state.ProgrammableSwitchEvent)

@@ -5,7 +5,7 @@
  ==================================
  IN DEVELOPMENT - PLEASE BE PATIENT
  ==================================
-
+            NOT TESTED
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 <img src="branding/lutron_hw_homebridge.png" width="500px">
@@ -17,7 +17,7 @@
 
 [Homebridge](https://github.com/nfarina/homebridge) plugin for Lutron Homeworks using Serial Port (RS232)
 
-Many Thanks to @cptechie who inspired me to create this plugin via his own plugin: [homebridge-lutron-homeworks](https://github.com/cptechie/homebridge-lutron-homeworks)
+Many Thanks to @cptechie who inspired me to create this plugin via his own plugin [homebridge-lutron-homeworks](https://github.com/cptechie/homebridge-lutron-homeworks) and to @davebeyer on the ideas on how to solve the huge amount of accessories via IPC and queue with his plugin [homebridge-lutron-hwi](https://github.com/davebeyer/homebridge-lutron-hwi)
 
 ## Config File
 
@@ -33,6 +33,8 @@ Many Thanks to @cptechie who inspired me to create this plugin via his own plugi
     "baudRate": 115200,
     "loginRequired": false,
     "password": "jetski",
+    "commandDelay": 100,
+    "extended": false,
     "debug": false,
     "devices": [
       {

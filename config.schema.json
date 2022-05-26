@@ -104,6 +104,20 @@
           }
         ]
       },
+      "commandDelay": {
+        "title": "Delay Between Commands (ms)",
+        "description": "Default Time in MS to wait between commands",
+        "type": "integer",
+        "default": 100,
+        "required": false
+      },
+      "extended": {
+        "title": "Extended Instance",
+        "description": "Check this if this instance is extending another homebridge instance (not directly communicating with port RS232)",
+        "type": "boolean",
+        "default": false,
+        "required": false
+      },
       "debug": {
         "title": "Enable Debug Logs",
         "description": "When checked, the plugin will produce extra logs for debugging purposes",
@@ -265,6 +279,9 @@
       "condition": {
         "functionBody": "try { return (model.loginRequired) } catch(e){ return false }"
       }
+    },
+    {
+      "key": "commandDelay"
     },
     {
       "key": "debug"
