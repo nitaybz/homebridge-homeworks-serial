@@ -8,7 +8,6 @@ class Button {
 		this.rs232 = platform.rs232
 		this.log = platform.log
 		this.api = platform.api
-		this.storage = platform.storage
 		this.cachedState = platform.cachedState
 		this.address = device.address
 		this.buttonId = device.buttonId
@@ -20,7 +19,8 @@ class Button {
 		this.manufacturer = 'Lutron Homeworks'
 		this.model = 'Programmable Button'
 		this.displayName = this.name
-		this.state = this.cachedState[this.id]
+
+		this.state = {}
 		this.processing = false
 		
 		this.UUID = this.api.hap.uuid.generate(this.id)
@@ -37,10 +37,6 @@ class Button {
 			this.api.registerPlatformAccessories(platform.PLUGIN_NAME, platform.PLATFORM_NAME, [this.accessory])
 		} else {
 			this.log.easyDebug(`"${this.name}" is Connected!`)
-			if (this.type !== this.accessory.context.type) {
-				this.removeOtherTypes()
-				this.accessory.context.type = this.type
-			}
 		}
 
 		let informationService = this.accessory.getService(Service.AccessoryInformation)
@@ -70,14 +66,9 @@ class Button {
 
 
 	updateHomeKit(newState) {
-		if (this.processing)
-			return
-
 		this.state = newState
 		
 		this.updateValue('ButtonService', 'ProgrammableSwitchEvent', this.state.ProgrammableSwitchEvent)
-		// cache last state to storage
-		this.storage.setItem('hw-serial-state', this.cachedState)
 	}
 
 	updateValue (serviceName, characteristicName, newValue) {

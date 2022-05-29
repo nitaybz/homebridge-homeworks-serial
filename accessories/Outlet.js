@@ -9,7 +9,6 @@ class Outlet {
 		this.rs232 = platform.rs232
 		this.log = platform.log
 		this.api = platform.api
-		this.storage = platform.storage
 		this.cachedState = platform.cachedState
 		this.address = device.address
 		this.buttonId = device.buttonId
@@ -21,7 +20,10 @@ class Outlet {
 		this.manufacturer = 'Lutron Homeworks'
 		this.model = 'Outlet'
 		this.displayName = this.name
-		this.state = this.cachedState[this.id]
+
+		this.state = {
+			On: false
+		}
 		this.processing = false
 		
 		this.UUID = this.api.hap.uuid.generate(this.id)
@@ -32,16 +34,14 @@ class Outlet {
 			this.accessory = new this.api.platformAccessory(this.name, this.UUID)
 			this.accessory.context.type = this.type
 			this.accessory.context.id = this.id
+			this.accessory.context.lastState = this.state
 
 			platform.accessories.push(this.accessory)
 			// register the accessory
 			this.api.registerPlatformAccessories(platform.PLUGIN_NAME, platform.PLATFORM_NAME, [this.accessory])
 		} else {
 			this.log.easyDebug(`"${this.name}" is Connected!`)
-			if (this.type !== this.accessory.context.type) {
-				this.removeOtherTypes()
-				this.accessory.context.type = this.type
-			}
+			this.state = this.accessory.context.lastState || {}
 		}
 
 		let informationService = this.accessory.getService(Service.AccessoryInformation)
@@ -75,15 +75,12 @@ class Outlet {
 	}
 
 	updateHomeKit(newState) {
-		if (this.processing)
-			return
-			
 		this.state = newState
 		
 		this.updateValue('OutletService', 'On', this.state.On)
 		this.updateValue('OutletService', 'OutletInUse', this.state.On)
 		// cache last state to storage
-		this.storage.setItem('hw-serial-state', this.cachedState)
+		this.accessory.context.lastState = this.state
 	}
 
 	updateValue (serviceName, characteristicName, newValue) {

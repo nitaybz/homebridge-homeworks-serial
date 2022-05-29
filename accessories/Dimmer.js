@@ -9,7 +9,6 @@ class Dimmer {
 		this.rs232 = platform.rs232
 		this.log = platform.log
 		this.api = platform.api
-		this.storage = platform.storage
 		this.cachedState = platform.cachedState
 		this.address = device.address
 		this.defaultBrightness = device.defaultBrightness || 100
@@ -21,7 +20,12 @@ class Dimmer {
 		this.manufacturer = 'Lutron Homeworks'
 		this.model = 'Dimmer'
 		this.displayName = this.name
-		this.state = this.cachedState[this.id]
+
+		this.state = {
+			On: false,
+			Brightness: 0
+		}
+
 		this.processing = false
 		
 		this.UUID = this.api.hap.uuid.generate(this.id)
@@ -32,16 +36,15 @@ class Dimmer {
 			this.accessory = new this.api.platformAccessory(this.name, this.UUID)
 			this.accessory.context.type = this.type
 			this.accessory.context.id = this.id
+			this.accessory.context.lastState = this.state
+			this.accessory.context.lastBrightness = this.defaultBrightness || 100
 
 			platform.accessories.push(this.accessory)
 			// register the accessory
 			this.api.registerPlatformAccessories(platform.PLUGIN_NAME, platform.PLATFORM_NAME, [this.accessory])
 		} else {
 			this.log.easyDebug(`"${this.name}" is Connected!`)
-			if (this.type !== this.accessory.context.type) {
-				this.removeOtherTypes()
-				this.accessory.context.type = this.type
-			}
+			this.state = this.accessory.context.lastState || {}
 		}
 
 		let informationService = this.accessory.getService(Service.AccessoryInformation)
@@ -76,15 +79,14 @@ class Dimmer {
 	}
 
 	updateHomeKit(newState) {
-		if (this.processing)
-			return
-			
 		this.state = newState
 		
 		this.updateValue('DimmerService', 'On', this.state.On)
 		this.updateValue('DimmerService', 'Brightness', this.state.Brightness)
 		// cache last state to storage
-		this.storage.setItem('hw-serial-state', this.cachedState)
+		this.accessory.context.lastState = this.state
+		if (this.state.Brightness)
+			this.accessory.context.lastBrightness = this.state.Brightness
 	}
 
 	updateValue (serviceName, characteristicName, newValue) {
