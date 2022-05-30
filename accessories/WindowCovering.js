@@ -114,7 +114,7 @@ class WindowCovering {
 			this.louverSwitch = this.accessory.addService(Service.Switch, 'Louver', `${this.name} Louver`)
 
 		this.louverSwitch.getCharacteristic(Characteristic.On)
-			.onSet(stateManager.set.LouverOn.bind(this))
+			.onSet(stateManager.set.LouverOn.bind(this, Characteristic))
 
 	}
 
@@ -127,6 +127,9 @@ class WindowCovering {
 	}
 
 	toggleLouver() {
+		if (this.louverProcessing)
+			return
+			
 		this.state.LouverOn = !this.state.LouverOn
 		this.updateValue('louverSwitch', 'On', this.state.LouverOn)
 
