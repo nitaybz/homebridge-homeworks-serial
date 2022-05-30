@@ -17,7 +17,7 @@ class WindowCovering {
 		this.closeButtonId = device.closeButtonId
 		this.stopButtonId = device.stopButtonId
 		this.louverButtonId = device.louverButtonId
-		this.louverPosition = device.louverPosition || 30
+		this.louverPosition = device.louverPosition || 20
 		this.rawCommands = device.rawCommands
 		this.rawStatus = device.rawStatus
 		this.timeToOpen = device.timeToOpen || 0
@@ -35,7 +35,8 @@ class WindowCovering {
 		this.state = {
 			CurrentPosition: 0,
 			TargetPosition: 0,
-			PositionState: 2
+			PositionState: 2,
+			LouverOn: false
 		}
 
 		this.processing = false
@@ -102,20 +103,20 @@ class WindowCovering {
 		if (this.stopButtonId || (this.rawCommands && this.rawCommands.stop))
 			this.WindowCoveringService.getCharacteristic(Characteristic.HoldPosition)
 				.onSet(stateManager.set.HoldPosition.bind(this))
-				.updateValue(this.state.LouverOn || false)
 	}
-
 
 	addLouverSwitch() {
 		this.log.easyDebug(`Adding Louver Switch Service for (${this.name})`)
+		const name = `${this.name} Louver`
 
-		this.louverSwitch = this.accessory.getService('Louver')
-		if (!this.louverSwitch)
-			this.louverSwitch = this.accessory.addService(Service.Switch, 'Louver', `${this.name} Louver`)
+		this.LouverSwitch = this.accessory.getService(name)
+		if (!this.LouverSwitch)
+			this.LouverSwitch = this.accessory.addService(Service.Switch, name, name)
 
-		this.louverSwitch.getCharacteristic(Characteristic.On)
+
+		this.LouverSwitch.getCharacteristic(Characteristic.On)
 			.onSet(stateManager.set.LouverOn.bind(this, Characteristic))
-
+			.updateValue(this.state.LouverOn || false)
 	}
 
 	removeLouverSwitch() {
@@ -131,12 +132,12 @@ class WindowCovering {
 			return
 			
 		this.state.LouverOn = !this.state.LouverOn
-		this.updateValue('louverSwitch', 'On', this.state.LouverOn)
+		this.updateValue('LouverSwitch', 'On', this.state.LouverOn)
 
 	}
 
 	updatePositionCommand(positionState) {
-		if (this.processing || this.state.LouverOn)
+		if (this.processing || this.state.LouverOn || this.louverProcessing)
 			return
 		
 		if (this.state.PositionState !== STOPPED && this.lastMove) {
