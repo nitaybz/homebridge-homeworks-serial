@@ -71,8 +71,39 @@ Many Thanks to @cptechie who inspired me to create this plugin via his own plugi
         "address": "04:06:01",
         "openButtonId": 4,
         "closeButtonId": 5,
-        "midButtonId": 6,
+        "stopButtonId": 6,
         "pressType": "single"
+      },
+      {
+        "name": "custom",
+        "type": "switch",
+        "address": "04:06:01",
+        "buttonId": 1,
+        "rawCommands": {
+          "on": "KBP, [04:06:01], 1",
+          "off": "KBP, [04:06:01], 2"
+        },
+        "rawStatus": {
+          "on": "KBP, [04:06:01], 1",
+          "off": "KBP, [04:06:01], 2"
+        }
+      },
+      {
+        "name": "Shutters2",
+        "type": "windowCovering",
+        "address": "01:01:00:02:04",
+        "timeToOpen": 30,
+        "timeToClose": 25,
+        "rawCommands": {
+          "open": "FADEDIM, 16, 0, 0, [01:01:00:02:04]",
+          "close": "FADEDIM, 35, 0, 0, [01:01:00:02:04]",
+          "stop": "FADEDIM, 0, 0, 0, [01:01:00:02:04]"
+        },
+        "rawStatus": {
+          "open": "DL, 16, 0, 0, [01:01:00:02:04]",
+          "close": "DL, 35, 0, 0, [01:01:00:02:04]",
+          "stop": "DL, 0, 0, 0, [01:01:00:02:04]"
+        }
       },
       {
         "name": "Living Room Scene",

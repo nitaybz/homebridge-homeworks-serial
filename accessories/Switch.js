@@ -12,6 +12,7 @@ class Switch {
 		this.cachedState = platform.cachedState
 		this.address = device.address
 		this.buttonId = device.buttonId
+		this.rawCommands = device.rawCommands
 		this.pressType = device.pressType || 'single'
 		this.id = `${this.address}.${this.buttonId}.${this.pressType}`
 		this.name = device.name || this.id

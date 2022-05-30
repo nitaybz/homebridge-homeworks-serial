@@ -214,9 +214,8 @@
               "placeholder": 1,
               "required": false
             },
-            "midButtonId": {
-              "title": "Mid Button ID",
-              "description": "Favorite position button. this button will be pressed when setting window covering to 50%",
+            "stopButtonId": {
+              "title": "Stop Button ID",
               "type": "integer",
               "placeholder": 1,
               "required": false
@@ -335,7 +334,7 @@
           }
         },
         {
-          "key": "devices[].midButtonId",
+          "key": "devices[].stopButtonId",
           "condition": {
             "functionBody": "try { return (model.devices[arrayIndices].type === 'windowCovering') } catch(e){ return false }"
           }

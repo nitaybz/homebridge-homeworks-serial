@@ -1,6 +1,8 @@
 let Characteristic, Service
 const stateManager = require('../lib/stateManager')
-
+const OPENING = 0
+const CLOSING = 1
+const STOPPED = 2
 class WindowCovering {
 	constructor(device, platform) {
 		Service = platform.api.hap.Service
@@ -13,9 +15,12 @@ class WindowCovering {
 		this.address = device.address
 		this.openButtonId = device.openButtonId
 		this.closeButtonId = device.closeButtonId
-		this.midButtonId = device.midButtonId
+		this.stopButtonId = device.stopButtonId
+		this.rawCommands = device.rawCommands
+		this.timeToOpen = device.timeToOpen || 0
+		this.timeToClose = device.timeToClose || 0
 		this.pressType = device.pressType || 'single'
-		this.id = `${this.address}.${this.openButtonId}.${this.closeButtonId}.${this.pressType}`
+		this.id = `${this.address}.${this.name}`
 		this.address = device.address
 		this.name = device.name || this.id
 		this.serial = this.id
@@ -81,13 +86,68 @@ class WindowCovering {
 			.setProps({
 				minValue: 0,
 				maxValue: 100,
-				minStep: this.midButtonId ? 50 : 100
+				minStep: this.timeToOpen && this.timeToClose && (this.stopButtonId || (this.rawCommands && this.rawCommands.stop)) ? 1 : 100
 			})
 			.onSet(stateManager.set.TargetPosition.bind(this, Characteristic))
 			.updateValue(this.state.TargetPosition || 0)
+
+		if (this.stopButtonId || (this.rawCommands && this.rawCommands.stop))
+			this.WindowCoveringService.getCharacteristic(Characteristic.HoldPosition)
+				.onSet(stateManager.set.HoldPosition.bind(this))
+
+			
 	}
 
+	updatePositionCommand(positionState) {
+		if (this.processing)
+			return
+		
+		if (this.state.PositionState !== STOPPED && this.lastMove) {
+			clearTimeout(this.movingTimeout)
+			const timeInSecSinceLastMove = (new Date().getTime() - this.lastMove) / 1000
+			if (this.state.PositionState === OPENING) {
+				const movedDistance = this.timeToOpen ? Math.round(timeInSecSinceLastMove / this.timeToOpen * 100) : 0
+				this.state.CurrentPosition += movedDistance
+			} else {
+				const movedDistance = this.timeToClose ? Math.round(timeInSecSinceLastMove / this.timeToClose * 100) : 0
+				this.state.CurrentPosition -= movedDistance
+			}
+		}
 
+		switch (positionState) {
+			case 'open':
+				this.lastMove = new Date().getTime()
+				this.state.TargetPosition = 100
+				this.state.PositionState = OPENING
+				break;
+			case 'close':
+				this.lastMove = new Date().getTime()
+				this.state.TargetPosition = 0
+				this.state.PositionState = CLOSING
+				break;
+			case 'stop':
+				this.lastMove = null
+				this.state.TargetPosition = this.state.CurrentPosition
+				this.state.PositionState = STOPPED
+				break;
+		}
+		this.updateHomeKit(this.state)
+
+		// Set timeout to stop at position
+		if (this.state.PositionState !== STOPPED) {
+			const distance = Math.abs(this.state.TargetPosition - this.state.CurrentPosition)
+
+			const calcTime = this.state.PositionState === OPENING && this.timeToOpen ? (distance * this.timeToOpen * 10) :
+				(this.state.PositionState === CLOSING && this.timeToClose ? (distance * this.timeToClose * 10) : 2000)
+
+			this.movingTimeout = setTimeout(async () => {
+				this.lastMove = null
+				this.state.PositionState = STOPPED
+				this.state.CurrentPosition = this.state.TargetPosition
+				this.updateHomeKit(this.state)
+			}, calcTime)
+		}
+	}
 
 	updateHomeKit(newState) {
 		this.state = newState
