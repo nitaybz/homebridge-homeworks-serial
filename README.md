@@ -74,7 +74,6 @@ Many Thanks to @cptechie who inspired me to create this plugin via his own plugi
           "openButtonId": 4,
           "closeButtonId": 5,
           "stopButtonId": 6,
-          "louverButtonId": 7,
           "pressType": "single"
         },
         {
