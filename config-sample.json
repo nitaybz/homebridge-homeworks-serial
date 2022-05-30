@@ -57,6 +57,7 @@
           "openButtonId": 4,
           "closeButtonId": 5,
           "stopButtonId": 6,
+          "louverButtonId": 7,
           "pressType": "single"
         },
         {
@@ -82,12 +83,14 @@
           "rawCommands": {
             "open": "FADEDIM, 16, 0, 0, [01:01:00:02:04]",
             "close": "FADEDIM, 35, 0, 0, [01:01:00:02:04]",
-            "stop": "FADEDIM, 0, 0, 0, [01:01:00:02:04]"
+            "stop": "FADEDIM, 0, 0, 0, [01:01:00:02:04]",
+            "louver": "KBP, [04:06:01], 1"
           },
           "rawStatus": {
-            "open": "DL, 16, 0, 0, [01:01:00:02:04]",
-            "close": "DL, 35, 0, 0, [01:01:00:02:04]",
-            "stop": "DL, 0, 0, 0, [01:01:00:02:04]"
+            "open": "DL, [01:01:00:02:04], 16",
+            "close": "DL, [01:01:00:02:04], 35",
+            "stop": "DL, [01:01:00:02:04], 0",
+            "louver": "KBP, [04:06:01], 1"
           }
         },
         {

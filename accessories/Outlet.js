@@ -13,6 +13,7 @@ class Outlet {
 		this.address = device.address
 		this.buttonId = device.buttonId
 		this.rawCommands = device.rawCommands
+		this.rawStatus = device.rawStatus
 		this.pressType = device.pressType || 'single'
 		this.id = `${this.address}.${this.buttonId}.${this.pressType}`
 		this.name = device.name || this.id

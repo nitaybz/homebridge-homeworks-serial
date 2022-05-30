@@ -37,80 +37,85 @@ Many Thanks to @cptechie who inspired me to create this plugin via his own plugi
     "extended": false,
     "debug": false,
     "devices": [
-      {
-        "name": "Hallway Light",
-        "type": "dimmer",
-        "address": "01:01:00:02:04",
-        "defaultBrightness": 100,
-        "defaultFadeTime": 1
-      },
-      {
-        "name": "Bathroom Light",
-        "type": "switch",
-        "address": "04:06:01",
-        "buttonId": 2,
-        "pressType": "single"
-      },
-      {
-        "name": "Heater",
-        "type": "outlet",
-        "address": "04:06:01",
-        "buttonId": 3,
-        "pressType": "double"
-      },
-      {
-        "name": "Chiller",
-        "type": "switch",
-        "address": "04:06:01",
-        "buttonId": 1,
-        "pressType": "hold"
-      },
-      {
-        "name": "Shutters",
-        "type": "windowCovering",
-        "address": "04:06:01",
-        "openButtonId": 4,
-        "closeButtonId": 5,
-        "stopButtonId": 6,
-        "pressType": "single"
-      },
-      {
-        "name": "custom",
-        "type": "switch",
-        "address": "04:06:01",
-        "buttonId": 1,
-        "rawCommands": {
-          "on": "KBP, [04:06:01], 1",
-          "off": "KBP, [04:06:01], 2"
+        {
+          "name": "Hallway Light",
+          "type": "dimmer",
+          "address": "01:01:00:02:04",
+          "defaultBrightness": 100,
+          "defaultFadeTime": 0
         },
-        "rawStatus": {
-          "on": "KBP, [04:06:01], 1",
-          "off": "KBP, [04:06:01], 2"
-        }
-      },
-      {
-        "name": "Shutters2",
-        "type": "windowCovering",
-        "address": "01:01:00:02:04",
-        "timeToOpen": 30,
-        "timeToClose": 25,
-        "rawCommands": {
-          "open": "FADEDIM, 16, 0, 0, [01:01:00:02:04]",
-          "close": "FADEDIM, 35, 0, 0, [01:01:00:02:04]",
-          "stop": "FADEDIM, 0, 0, 0, [01:01:00:02:04]"
+        {
+          "name": "Bathroom Light",
+          "type": "switch",
+          "address": "04:06:01",
+          "buttonId": 2,
+          "pressType": "single"
         },
-        "rawStatus": {
-          "open": "DL, 16, 0, 0, [01:01:00:02:04]",
-          "close": "DL, 35, 0, 0, [01:01:00:02:04]",
-          "stop": "DL, 0, 0, 0, [01:01:00:02:04]"
+        {
+          "name": "Heater",
+          "type": "outlet",
+          "address": "04:06:01",
+          "buttonId": 3,
+          "pressType": "double"
+        },
+        {
+          "name": "Chiller",
+          "type": "switch",
+          "address": "04:06:01",
+          "buttonId": 1,
+          "pressType": "hold"
+        },
+        {
+          "name": "Shutters",
+          "type": "windowCovering",
+          "address": "04:06:01",
+          "timeToOpen": 30,
+          "timeToClose": 25,
+          "openButtonId": 4,
+          "closeButtonId": 5,
+          "stopButtonId": 6,
+          "louverButtonId": 7,
+          "pressType": "single"
+        },
+        {
+          "name": "custom",
+          "type": "switch",
+          "address": "04:06:01",
+          "buttonId": 1,
+          "rawCommands": {
+            "on": "KBP, [04:06:01], 1",
+            "off": "KBP, [04:06:01], 2"
+          },
+          "rawStatus": {
+            "on": "KBP, [04:06:01], 1",
+            "off": "KBP, [04:06:01], 2"
+          }
+        },
+        {
+          "name": "Shutters2",
+          "type": "windowCovering",
+          "address": "01:01:00:02:04",
+          "timeToOpen": 30,
+          "timeToClose": 25,
+          "rawCommands": {
+            "open": "FADEDIM, 16, 0, 0, [01:01:00:02:04]",
+            "close": "FADEDIM, 35, 0, 0, [01:01:00:02:04]",
+            "stop": "FADEDIM, 0, 0, 0, [01:01:00:02:04]",
+            "louver": "KBP, [04:06:01], 1"
+          },
+          "rawStatus": {
+            "open": "DL, [01:01:00:02:04], 16",
+            "close": "DL, [01:01:00:02:04], 35",
+            "stop": "DL, [01:01:00:02:04], 0",
+            "louver": "KBP, [04:06:01], 1"
+          }
+        },
+        {
+          "name": "Living Room Scene",
+          "type": "button",
+          "address": "04:06:01",
+          "buttonId": 7
         }
-      },
-      {
-        "name": "Living Room Scene",
-        "type": "button",
-        "address": "04:06:01",
-        "buttonId": 7
-      }
     ]
   }
 ]

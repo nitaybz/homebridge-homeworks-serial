@@ -16,18 +16,21 @@ class WindowCovering {
 		this.openButtonId = device.openButtonId
 		this.closeButtonId = device.closeButtonId
 		this.stopButtonId = device.stopButtonId
+		this.louverButtonId = device.louverButtonId
+		this.louverPosition = device.louverPosition || 30
 		this.rawCommands = device.rawCommands
+		this.rawStatus = device.rawStatus
 		this.timeToOpen = device.timeToOpen || 0
 		this.timeToClose = device.timeToClose || 0
 		this.pressType = device.pressType || 'single'
-		this.id = `${this.address}.${this.name}`
-		this.address = device.address
+		this.id = `${device.address}.${device.name}`
 		this.name = device.name || this.id
 		this.serial = this.id
 		this.type = device.type
 		this.manufacturer = 'Lutron Homeworks'
 		this.model = 'Window Covering'
 		this.displayName = this.name
+		this.louverExist = !!(this.louverButtonId || this.rawCommands.louver)
 
 		this.state = {
 			CurrentPosition: 0,
@@ -68,6 +71,11 @@ class WindowCovering {
 		
 		
 		this.addWindowCoveringService()
+
+		if (this.louverExist)
+			this.addLouverSwitch()
+		else
+			this.removeLouverSwitch()
 	}
 
 	addWindowCoveringService() {
@@ -94,12 +102,38 @@ class WindowCovering {
 		if (this.stopButtonId || (this.rawCommands && this.rawCommands.stop))
 			this.WindowCoveringService.getCharacteristic(Characteristic.HoldPosition)
 				.onSet(stateManager.set.HoldPosition.bind(this))
+				.updateValue(this.state.LouverOn || false)
+	}
 
-			
+
+	addLouverSwitch() {
+		this.log.easyDebug(`Adding Louver Switch Service for (${this.name})`)
+
+		this.louverSwitch = this.accessory.getService('Louver')
+		if (!this.louverSwitch)
+			this.louverSwitch = this.accessory.addService(Service.Switch, 'Louver', `${this.name} Louver`)
+
+		this.louverSwitch.getCharacteristic(Characteristic.On)
+			.onSet(stateManager.set.LouverOn.bind(this))
+
+	}
+
+	removeLouverSwitch() {
+		let LouverSwitch = this.accessory.getService('Louver')
+		if (LouverSwitch) {
+			// remove service
+			this.accessory.removeService(LouverSwitch)
+		}
+	}
+
+	toggleLouver() {
+		this.state.LouverOn = !this.state.LouverOn
+		this.updateValue('louverSwitch', 'On', this.state.LouverOn)
+
 	}
 
 	updatePositionCommand(positionState) {
-		if (this.processing)
+		if (this.processing || this.state.LouverOn)
 			return
 		
 		if (this.state.PositionState !== STOPPED && this.lastMove) {
