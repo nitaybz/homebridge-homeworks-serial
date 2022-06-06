@@ -120,11 +120,10 @@ class WindowCovering {
 	}
 
 	removeLouverSwitch() {
-		let LouverSwitch = this.accessory.getService('Louver')
-		if (LouverSwitch) {
-			// remove service
+		// remove service
+		let LouverSwitch = this.accessory.getService(`${this.name} Louver`)
+		if (LouverSwitch)
 			this.accessory.removeService(LouverSwitch)
-		}
 	}
 
 	toggleLouver() {
@@ -137,9 +136,11 @@ class WindowCovering {
 	}
 
 	updatePositionCommand(positionState) {
-		if (this.processing || this.state.LouverOn || this.louverProcessing)
+		if (this.processing || this.louverProcessing)
 			return
 		
+		this.log.easyDebug(`${this.name} - Detected "${positionState}" command`)
+
 		if (this.state.PositionState !== STOPPED && this.lastMove) {
 			clearTimeout(this.movingTimeout)
 			const timeInSecSinceLastMove = (new Date().getTime() - this.lastMove) / 1000
@@ -177,8 +178,14 @@ class WindowCovering {
 
 			const calcTime = this.state.PositionState === OPENING && this.timeToOpen ? (distance * this.timeToOpen * 10) :
 				(this.state.PositionState === CLOSING && this.timeToClose ? (distance * this.timeToClose * 10) : 2000)
-
+			
+			this.log.easyDebug(`${this.name} - Stopping the blinds in ${calcTime/1000} seconds`)
 			this.movingTimeout = setTimeout(async () => {
+				this.log(`${this.name} - Stopped`)
+				if (this.state.LouverOn) {
+					this.log(`${this.name} - Turning OFF Louver`)
+					this.state.LouverOn = false
+				}
 				this.lastMove = null
 				this.state.PositionState = STOPPED
 				this.state.CurrentPosition = this.state.TargetPosition
